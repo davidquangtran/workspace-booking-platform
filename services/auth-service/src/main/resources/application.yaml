@@ -1,3 +1,16 @@
 spring:
   application:
     name: auth-service
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+      - org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration
+      - org.springframework.boot.devtools.autoconfigure.DevToolsDataSourceAutoConfiguration
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.security: DEBUG

@@ -1,57 +1,68 @@
-# =========================
-# Java / Maven
-# =========================
+# ========== Build output ==========
 target/
-*.log
+build/
+out/
 *.class
-
-# Maven wrapper
-.mvn/wrapper/maven-wrapper.jar
-
-# =========================
-# Spring Boot
-# =========================
 *.jar
 *.war
+*.ear
+*.nar
 
-# =========================
-# IDE (IntelliJ)
-# =========================
+# ========== IntelliJ IDEA ==========
 .idea/
 *.iml
+*.iws
+*.ipr
 
-# =========================
-# VSCode (nếu có)
-# =========================
+# ========== Eclipse ==========
+.project
+.classpath
+.settings/
+bin/
+.factorypath
+
+# ========== VS Code ==========
 .vscode/
 
-# =========================
-# OS
-# =========================
+# ========== Maven ==========
+# Giữ maven-wrapper.properties (config) nhưng bỏ qua jar
+.mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+
+# ========== Logs ==========
+*.log
+logs/
+*.log.*
+
+# ========== OS ==========
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# =========================
-# Env files (IMPORTANT)
-# =========================
+# ========== Env & Secrets ==========
 .env
-.env.*
+.env.local
+.env.*.local
 application-local.yml
-application-dev.yml
+application-local.yaml
+application-local.properties
+application-secrets.yml
+*.pem
+*.key
+*.p12
 
-# =========================
-# Logs
-# =========================
-logs/
-*.out
+# ========== Docker ==========
+docker/data/
+postgres_data/
+mysql_data/
+redis_data/
 
-# =========================
-# Docker (optional)
-# =========================
-docker-data/
+# ========== Test reports ==========
+.surefire-reports/
+**/site/
 
-# =========================
-# Node (nếu có frontend sau này)
-# =========================
-node_modules/
-dist/
+# ========== Temporary files ==========
+*.swp
+*.swo
+*~
+.tmp/
