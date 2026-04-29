@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: auth-service
+
+  # Active profile mặc định = local (khi run mà không set gì)
+  profiles:
+    active: local
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+
+server:
+  port: 8081
+  shutdown: graceful
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%logger{36}] - %msg%n"
