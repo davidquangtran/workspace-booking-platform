@@ -43,10 +43,11 @@ desktop.ini
 .env
 .env.local
 .env.*.local
-application-local.yml
-application-local.yaml
-application-local.properties
+application-*-private.yml
+application-*-private.yaml
+application-*-private.properties
 application-secrets.yml
+application-secrets.yaml
 *.pem
 *.key
 *.p12
