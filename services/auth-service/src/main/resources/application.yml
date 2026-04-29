@@ -2,7 +2,6 @@ spring:
   application:
     name: auth-service
 
-  # Active profile mặc định = local (khi run mà không set gì)
   profiles:
     active: local
 
@@ -17,6 +16,24 @@ spring:
 server:
   port: 8081
   shutdown: graceful
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    display-request-duration: true
+  show-actuator: false
+  packages-to-scan: com.workspace.auth.adapters.controllers
+
+auth:
+  jwt:
+    issuer: workspace-booking-platform
+    access-token-expiration-minutes: 15
+    refresh-token-expiration-days: 7
 
 logging:
   pattern:

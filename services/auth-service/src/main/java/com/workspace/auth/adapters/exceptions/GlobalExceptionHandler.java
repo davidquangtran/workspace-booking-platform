@@ -1,9 +1,7 @@
 package com.workspace.auth.adapters.exceptions;
 
-import com.workspace.auth.entities.exception.DomainException;
-import com.workspace.auth.entities.exception.EmailAlreadyExistsException;
-import com.workspace.auth.entities.exception.InvalidEmailException;
-import com.workspace.auth.entities.exception.WeakPasswordException;
+import com.workspace.auth.entities.exception.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.workspace.auth.entities.exception.InvalidRefreshTokenException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -112,13 +111,44 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex) {
+        ErrorResponse response = new ErrorResponse(
+                "INVALID_CREDENTIALS",
+                ex.getMessage(),
+                null,
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRefreshToken(InvalidRefreshTokenException ex) {
+        ErrorResponse response = new ErrorResponse(
+                "INVALID_REFRESH_TOKEN",
+                ex.getMessage(),
+                null,
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
     /**
      * Standard error response envelope.
      */
+    @Schema(description = "Standardized error response")
     public record ErrorResponse(
+
+            @Schema(description = "Machine-readable error code", example = "EMAIL_ALREADY_EXISTS")
             String code,
+
+            @Schema(description = "Human-readable error message", example = "Email already exists: alice@example.com")
             String message,
+
+            @Schema(description = "Per-field validation errors (only present for validation errors)")
             Map<String, String> fieldErrors,
+
+            @Schema(description = "Server timestamp")
             LocalDateTime timestamp
     ) {
     }

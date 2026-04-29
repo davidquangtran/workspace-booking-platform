@@ -10,6 +10,10 @@ spring:
       ddl-auto: create-drop
     show-sql: false
 
+auth:
+  jwt:
+    secret: test-secret-key-must-be-at-least-256-bits-long-for-hs256
+
 logging:
   level:
     root: WARN

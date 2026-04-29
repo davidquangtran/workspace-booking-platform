@@ -17,6 +17,10 @@ spring:
       hibernate:
         format_sql: true
 
+auth:
+  jwt:
+    secret: local-dev-secret-key-must-be-at-least-256-bits-long-for-hs256
+
 logging:
   level:
     com.workspace.auth: DEBUG
