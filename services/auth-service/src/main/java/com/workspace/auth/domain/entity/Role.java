@@ -1,6 +1,8 @@
-package com.workspace.auth.domain;
+package com.workspace.auth.domain.entity;
 
 public enum Role {
-    USER,
-    ADMIN
+    CUSTOMER,
+    ADMIN,
+    MANAGER,
+    STAFF
 }

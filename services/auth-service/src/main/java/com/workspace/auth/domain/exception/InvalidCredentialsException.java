@@ -1,4 +1,4 @@
-package com.workspace.auth.entities.exception;
+package com.workspace.auth.domain.exception;
 
 public class InvalidCredentialsException extends DomainException {
 

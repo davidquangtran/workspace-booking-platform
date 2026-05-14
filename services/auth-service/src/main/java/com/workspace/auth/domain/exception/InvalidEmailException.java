@@ -1,15 +1,8 @@
-package com.workspace.auth.entities.exception;
+package com.workspace.auth.domain.exception;
 
-public class InvalidEmailException extends DomainException {
+public class InvalidEmailException extends RuntimeException  {
 
-    private final String invalidValue;
-
-    public InvalidEmailException(String invalidValue) {
-        super("Invalid email format: " + invalidValue);
-        this.invalidValue = invalidValue;
-    }
-
-    public String getInvalidValue() {
-        return invalidValue;
+    public InvalidEmailException(String message) {
+        super(message);
     }
 }

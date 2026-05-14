@@ -6,6 +6,9 @@ spring:
     active: local
 
   jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
@@ -27,13 +30,13 @@ springdoc:
     try-it-out-enabled: true
     display-request-duration: true
   show-actuator: false
-  packages-to-scan: com.workspace.auth.adapters.controllers
+  packages-to-scan: com.workspace.auth.presentation.controller  # ← fix
 
 auth:
   jwt:
-    issuer: workspace-booking-platform
-    access-token-expiration-minutes: 15
-    refresh-token-expiration-days: 7
+    secret: workzy-super-secret-key-must-be-at-least-256-bits-long-for-hs256
+    access-token-expiry: 900000
+    refresh-token-expiry: 604800000
 
 logging:
   pattern:

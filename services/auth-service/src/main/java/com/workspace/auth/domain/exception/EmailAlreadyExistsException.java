@@ -1,17 +1,8 @@
-package com.workspace.auth.entities.exception;
+package com.workspace.auth.domain.exception;
 
-import com.workspace.auth.entities.Email;
+public class EmailAlreadyExistsException extends RuntimeException  {
 
-public class EmailAlreadyExistsException extends DomainException {
-
-    private final Email email;
-
-    public EmailAlreadyExistsException(Email email) {
-        super("Email already exists: " + email.value());
-        this.email = email;
-    }
-
-    public Email getEmail() {
-        return email;
+    public EmailAlreadyExistsException(String email) {
+        super("The user with email '" + email + "' already exists in the system.");
     }
 }
