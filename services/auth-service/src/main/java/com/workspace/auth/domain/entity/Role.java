@@ -1,4 +1,4 @@
-package com.workspace.auth.entities;
+package com.workspace.auth.domain;
 
 public enum Role {
     USER,
