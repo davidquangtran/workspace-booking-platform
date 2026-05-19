@@ -30,9 +30,7 @@
 
     <modules>
         <module>services/auth-service</module>
-        <!-- Sau này thêm vào đây khi tạo service mới -->
-        <!-- <module>services/booking-service</module> -->
-        <!-- <module>services/workspace-service</module> -->
+        <module>services/api-gateway</module>
     </modules>
 
     <!-- Quản lý version tập trung — service con chỉ cần groupId + artifactId -->
