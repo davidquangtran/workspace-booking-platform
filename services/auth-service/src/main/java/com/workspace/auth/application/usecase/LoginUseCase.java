@@ -6,6 +6,7 @@ import com.workspace.auth.application.port.JwtPort;
 import com.workspace.auth.application.port.PasswordEncoder;
 import com.workspace.auth.domain.entity.User;
 import com.workspace.auth.domain.exception.InvalidCredentialsException;
+import com.workspace.auth.domain.repository.RefreshTokenRepository;
 import com.workspace.auth.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class LoginUseCase {
     private final UserRepository userRepository;
     private final JwtPort jwtPort;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenRepository refreshTokenRepo;
 
     public AuthResponse execute(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
@@ -26,7 +28,6 @@ public class LoginUseCase {
         }
 
         String accessToken = jwtPort.generateAccessToken(user);
-
         String refreshToken = jwtPort.generateRefreshToken(user);
 
         return AuthResponse.of(accessToken, refreshToken, jwtPort.getAccessTokenExpiresIn());

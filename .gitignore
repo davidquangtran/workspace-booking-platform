@@ -68,3 +68,7 @@ pgadmin_data/
 *.swo
 *~
 .tmp/
+# =========== Set up local application ========
+application-local.yml
+application-local-*.yml
+!application-local-example.yml
