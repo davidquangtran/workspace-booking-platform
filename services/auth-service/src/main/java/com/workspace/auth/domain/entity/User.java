@@ -5,19 +5,21 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    private UUID id;
-    private String email;
-    private String password;
-    private Role role;
-    private boolean isActive;
-    private LocalDateTime createdAt;
+    UUID id;
+    String email;
+    String password;
+    Role role;
+    boolean isActive;
+    LocalDateTime createdAt;
 
     @Builder(access = AccessLevel.PACKAGE)
     private User(UUID id, String email, String password,

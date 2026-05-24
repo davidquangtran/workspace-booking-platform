@@ -27,6 +27,7 @@ public class SecurityConfig {
                         // Cho phép không cần token
                         .requestMatchers(
                                 "/api/v1/auth/**",
+                                "/api/v1/user/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
