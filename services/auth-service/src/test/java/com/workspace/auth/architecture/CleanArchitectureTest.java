@@ -13,52 +13,93 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 )
 public class CleanArchitectureTest {
 
-    // Layer 1 (Entities) — phải pure, không phụ thuộc gì cả
-    @ArchTest
-    static final ArchRule entities_should_not_depend_on_usecases =
-            noClasses().that().resideInAPackage("..entities..")
-                    .should().dependOnClassesThat().resideInAPackage("..usecases..");
+    // ── Package constants — đúng với structure thực tế ──
+    private static final String DOMAIN         = "..domain..";
+    private static final String APPLICATION    = "..application..";
+    private static final String INFRASTRUCTURE = "..infrastructure..";
+    private static final String PRESENTATION   = "..presentation..";
+
+    // ════════════════════════════════════════════
+    // DOMAIN — tầng trong cùng, không biết ai cả
+    // ════════════════════════════════════════════
 
     @ArchTest
-    static final ArchRule entities_should_not_depend_on_adapters =
-            noClasses().that().resideInAPackage("..entities..")
-                    .should().dependOnClassesThat().resideInAPackage("..adapters..");
+    static final ArchRule domain_must_not_depend_on_application =
+            noClasses().that().resideInAPackage(DOMAIN)
+                    .should().dependOnClassesThat().resideInAPackage(APPLICATION)
+                    .because("Domain là core business — không được biết application layer tồn tại");
 
     @ArchTest
-    static final ArchRule entities_should_not_depend_on_frameworks =
-            noClasses().that().resideInAPackage("..entities..")
-                    .should().dependOnClassesThat().resideInAPackage("..frameworks..");
+    static final ArchRule domain_must_not_depend_on_infrastructure =
+            noClasses().that().resideInAPackage(DOMAIN)
+                    .should().dependOnClassesThat().resideInAPackage(INFRASTRUCTURE)
+                    .because("Domain không được biết JPA, database hay bất kỳ framework nào");
 
     @ArchTest
-    static final ArchRule entities_should_not_depend_on_spring =
-            noClasses().that().resideInAPackage("..entities..")
-                    .should().dependOnClassesThat().resideInAPackage("org.springframework..");
+    static final ArchRule domain_must_not_depend_on_presentation =
+            noClasses().that().resideInAPackage(DOMAIN)
+                    .should().dependOnClassesThat().resideInAPackage(PRESENTATION)
+                    .because("Domain không được biết HTTP hay Controller tồn tại");
 
     @ArchTest
-    static final ArchRule entities_should_not_depend_on_jpa =
-            noClasses().that().resideInAPackage("..entities..")
-                    .should().dependOnClassesThat().resideInAPackage("jakarta.persistence..");
-
-    // Layer 2 (Use Cases) — chỉ được phụ thuộc Entities
-    @ArchTest
-    static final ArchRule usecases_should_not_depend_on_adapters =
-            noClasses().that().resideInAPackage("..usecases..")
-                    .should().dependOnClassesThat().resideInAPackage("..adapters..");
+    static final ArchRule domain_must_not_depend_on_spring =
+            noClasses().that().resideInAPackage(DOMAIN)
+                    .should().dependOnClassesThat().resideInAPackage("org.springframework..")
+                    .because("Domain phải là pure Java — không import Spring");
 
     @ArchTest
-    static final ArchRule usecases_should_not_depend_on_frameworks =
-            noClasses().that().resideInAPackage("..usecases..")
-                    .should().dependOnClassesThat().resideInAPackage("..frameworks..");
+    static final ArchRule domain_must_not_depend_on_jpa =
+            noClasses().that().resideInAPackage(DOMAIN)
+                    .should().dependOnClassesThat().resideInAPackage("jakarta.persistence..")
+                    .because("Domain không được biết JPA — @Entity chỉ xuất hiện ở infrastructure");
+
+    // ════════════════════════════════════════════
+    // APPLICATION — biết domain, không biết ra ngoài
+    // ════════════════════════════════════════════
 
     @ArchTest
-    static final ArchRule usecases_should_not_depend_on_jpa =
-            noClasses().that().resideInAPackage("..usecases..")
-                    .should().dependOnClassesThat().resideInAPackage("jakarta.persistence..");
+    static final ArchRule application_must_not_depend_on_infrastructure =
+            noClasses().that().resideInAPackage(APPLICATION)
+                    .should().dependOnClassesThat().resideInAPackage(INFRASTRUCTURE)
+                    .because("Use case không được import JPA repository hay JWT implementation");
 
-    // Layer 3 (Adapters) — không được phụ thuộc Frameworks (config)
-    // (Adapter dùng Spring/JPA là OK vì đó là chi tiết kỹ thuật của adapter)
     @ArchTest
-    static final ArchRule adapters_should_not_depend_on_frameworks =
-            noClasses().that().resideInAPackage("..adapters..")
-                    .should().dependOnClassesThat().resideInAPackage("..frameworks..");
+    static final ArchRule application_must_not_depend_on_presentation =
+            noClasses().that().resideInAPackage(APPLICATION)
+                    .should().dependOnClassesThat().resideInAPackage(PRESENTATION)
+                    .because("Use case không được biết Controller hay HTTP tồn tại");
+
+    @ArchTest
+    static final ArchRule application_must_not_depend_on_jpa =
+            noClasses().that().resideInAPackage(APPLICATION)
+                    .should().dependOnClassesThat().resideInAPackage("jakarta.persistence..")
+                    .because("Use case chỉ dùng domain interface — không biết JPA");
+
+    // ════════════════════════════════════════════
+    // INFRASTRUCTURE — biết tất cả nhưng không được
+    //                  phụ thuộc presentation
+    // ════════════════════════════════════════════
+
+    @ArchTest
+    static final ArchRule infrastructure_must_not_depend_on_presentation =
+            noClasses().that().resideInAPackage(INFRASTRUCTURE)
+                    .should().dependOnClassesThat().resideInAPackage(PRESENTATION)
+                    .because("JPA repository không được biết Controller tồn tại");
+
+    // ════════════════════════════════════════════
+    // PRESENTATION — biết application, không được
+    //                bypass vào infrastructure
+    // ════════════════════════════════════════════
+
+    @ArchTest
+    static final ArchRule presentation_must_not_depend_on_infrastructure =
+            noClasses().that().resideInAPackage(PRESENTATION)
+                    .should().dependOnClassesThat().resideInAPackage(INFRASTRUCTURE)
+                    .because("Controller chỉ được gọi Use Case — không gọi thẳng JPA repository");
+
+    @ArchTest
+    static final ArchRule presentation_must_not_depend_on_domain_repository =
+            noClasses().that().resideInAPackage(PRESENTATION)
+                    .should().dependOnClassesThat().resideInAPackage("..domain.repository..")
+                    .because("Controller không được gọi thẳng domain repository — phải qua use case");
 }

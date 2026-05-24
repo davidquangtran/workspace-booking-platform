@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: auth-service
+
+  profiles:
+    active: local
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    open-in-view: false
+
+server:
+  port: 8081
+  shutdown: graceful
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    display-request-duration: true
+  show-actuator: false
+  packages-to-scan: com.workspace.auth.presentation.controller  # ← fix
+
+auth:
+  jwt:
+    secret: workzy-super-secret-key-must-be-at-least-256-bits-long-for-hs256
+    access-token-expiry: 900000
+    refresh-token-expiry: 604800000
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] [%logger{36}] - %msg%n"

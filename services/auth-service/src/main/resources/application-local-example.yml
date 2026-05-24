@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: YOUR_DB_URL_HERE
+    username: YOUR_DB_USERNAME
+    password: YOUR_DB_PASSWORD
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+auth:
+  jwt:
+    secret: local-dev-secret-key-must-be-at-least-256-bits-long-for-hs256
+
+logging:
+  level:
+    com.workspace.auth: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
