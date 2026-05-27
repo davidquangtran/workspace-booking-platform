@@ -34,4 +34,16 @@ public class UserMapper {
                 entity.getCreatedAt()
         );
     }
+
+    public UserJpaEntity toUpdatedEntity(User domain, UserJpaEntity entity) {
+        return UserJpaEntity.builder()
+                .id(entity.getId())
+                .email(domain.getEmail())
+                .password(domain.getPassword())
+                .role(domain.getRole())
+                .isActive(domain.isActive())
+                .version(entity.getVersion())
+                .createdAt(entity.getCreatedAt())
+                .build();
+    }
 }

@@ -14,6 +14,9 @@ public record RegisterRequest(
 
         @NotBlank(message = "Password không được để trống")
         @Size(min = 8, message = "Password phải có ít nhất 8 ký tự")
-        String password
+        String password,
 
-) {}
+        String deviceInfo,
+        String ipAddress
+) {
+}

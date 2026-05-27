@@ -13,29 +13,32 @@ import java.util.UUID;
 @Repository
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
-    private final UserJpaRepository jpaRepository;
-    private final UserMapper userMapper;
+    private final UserJpaRepository repo;
+    private final UserMapper mapper;
 
 
     @Override
     public User save(User user) {
-        UserJpaEntity entity = userMapper.toJpaEntity(user);
-        UserJpaEntity saved = jpaRepository.save(entity);
-        return userMapper.toDomain(saved);
+        UserJpaEntity entity =
+                repo.findById(user.getId())
+                        .map(existing -> mapper.toUpdatedEntity(user, existing))
+                        .orElseGet(() -> mapper.toJpaEntity(user));
+        UserJpaEntity saved = repo.save(entity);
+        return mapper.toDomain(saved);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return jpaRepository.findByEmail(email).map(userMapper::toDomain);
+        return repo.findByEmail(email).map(mapper::toDomain);
     }
 
     @Override
-    public Optional<User> findByIdAndIsActive(UUID id,boolean isActive) {
-        return jpaRepository.findByIdAndIsActive(id,isActive).map(userMapper::toDomain);
+    public Optional<User> findByIdAndIsActive(UUID id, boolean isActive) {
+        return repo.findByIdAndIsActive(id, isActive).map(mapper::toDomain);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return jpaRepository.existsByEmail(email);
+        return repo.existsByEmail(email);
     }
 }

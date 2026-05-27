@@ -1,29 +1,32 @@
 package com.workspace.auth.application.usecase;
 
-import com.workspace.auth.application.port.JwtPort;
-import com.workspace.auth.domain.entity.RefreshToken;
-import com.workspace.auth.domain.entity.User;
+import com.workspace.auth.application.port.TokenHasher;
 import com.workspace.auth.domain.repository.RefreshTokenRepository;
-import com.workspace.auth.domain.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LogoutUseCase {
-    private final UserRepository userRepo;
-    private final RefreshTokenRepository refreshTokenRepo;
-    private final JwtPort jwtPort;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenHasher tokenHasher;
 
-    public void logout(String accessToken){
-        UUID userId =  jwtPort.extractUserId(accessToken);
-        User user = userRepo.findByIdAndIsActive(userId,true).orElseThrow(()-> new EntityNotFoundException("Can't find user with ID:"+userId));
-        RefreshToken refreshToken = refreshTokenRepo.findByUserId(user.getId()).orElseThrow(()-> new EntityNotFoundException("Can't find refresh token"));
-        refreshToken.revoke();
-        refreshTokenRepo.save(refreshToken);
+    @Transactional
+    public void execute(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return;
+        }
+
+        String tokenHash = tokenHasher.sha256(refreshToken);
+
+        refreshTokenRepository.findByTokenHash(tokenHash)
+                .ifPresent(token -> {
+                    token.revoke();
+                    refreshTokenRepository.save(token);
+                    log.info("Refresh token revoked for user {}", token.getUserId());
+                });
     }
 }

@@ -16,6 +16,9 @@ spring:
           time_zone: UTC
     open-in-view: false
 
+cookie:
+  secure: true
+
 server:
   port: 8081
   shutdown: graceful

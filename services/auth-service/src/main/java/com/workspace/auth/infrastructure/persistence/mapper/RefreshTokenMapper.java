@@ -7,24 +7,52 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefreshTokenMapper {
 
-    public RefreshTokenJpaEntity toJpaEntity(RefreshToken refreshToken) {
+    public RefreshTokenJpaEntity toJpaEntity(RefreshToken domain) {
         return RefreshTokenJpaEntity.builder()
-                .id(refreshToken.getId())
-                .userId(refreshToken.getUserId())
-                .tokenHash(refreshToken.getTokenHash())
-                .isActive(refreshToken.getIsActive())
-                .createdAt(refreshToken.getCreatedAt())
+                .id(domain.getId())
+                .parentTokenId(domain.getParentTokenId())
+                .familyTokenId(domain.getFamilyTokenId())
+                .userId(domain.getUserId())
+                .tokenHash(domain.getTokenHash())
+                .deviceInfo(domain.getDeviceInfo())
+                .ipAddress(domain.getIpAddress())
+                .expiresAt(domain.getExpiresAt())
+                .revokedAt(domain.getRevokedAt())
+                .createdAt(domain.getCreatedAt())
                 .build();
     }
 
-    public RefreshToken toDomain(RefreshTokenJpaEntity entity){
-        return RefreshToken.builder()
+    public RefreshToken toDomain(RefreshTokenJpaEntity entity) {
+        return RefreshToken.reconstitute(
+                entity.getId(),
+                entity.getParentTokenId(),
+                entity.getFamilyTokenId(),
+                entity.getUserId(),
+                entity.getTokenHash(),
+                entity.getDeviceInfo(),
+                entity.getIpAddress(),
+                entity.getExpiresAt(),
+                entity.getRevokedAt(),
+                entity.getCreatedAt()
+        );
+    }
+
+    public RefreshTokenJpaEntity toUpdatedEntity(
+            RefreshToken domain,
+            RefreshTokenJpaEntity entity
+    ) {
+        return RefreshTokenJpaEntity.builder()
                 .id(entity.getId())
-                .userId(entity.getUserId())
-                .tokenHash(entity.getTokenHash())
-                .isActive(entity.getIsActive())
+                .parentTokenId(domain.getParentTokenId())
+                .familyTokenId(domain.getFamilyTokenId())
+                .userId(domain.getUserId())
+                .tokenHash(domain.getTokenHash())
+                .deviceInfo(domain.getDeviceInfo())
+                .ipAddress(domain.getIpAddress())
+                .expiresAt(domain.getExpiresAt())
+                .revokedAt(domain.getRevokedAt())
                 .createdAt(entity.getCreatedAt())
+                .version(entity.getVersion())
                 .build();
     }
-
 }
