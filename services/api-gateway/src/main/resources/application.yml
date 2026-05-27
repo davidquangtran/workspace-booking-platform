@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: api-gateway
+
+  profiles:
+    active: local
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins:
+                  - "http://localhost:3000"      # frontend dev
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - OPTIONS
+                allowed-headers:
+                  - Content-Type
+                  - Authorization
+                  - X-Requested-With
+                  - Accept
+                allow-credentials: true           # ← BẮT BUỘC cho cookie
+                max-age: 3600
+          routes:
+            - id: auth-service-route
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/v1/auth/**
+              filters:
+                # 1. Thêm header X-Gateway-Source vào request gửi xuống auth-service
+                - AddRequestHeader=X-Gateway-Source, api-gateway
+
+                # 3. Đặt timeout 5 giây — nếu auth-service không response trong 5s, trả lỗi
+#                - name: CircuitBreaker
+#                  args:
+#                    name: authServiceCB
+#                    fallbackUri: forward:/fallback/auth
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET}
+
+server:
+  port: 8080
+
+# Bật các Actuator endpoint hữu ích cho debug gateway
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, gateway
+  endpoint:
+    gateway:
+      access: unrestricted
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: INFO

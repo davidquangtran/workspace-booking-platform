@@ -1,7 +1,7 @@
 package com.workspace.auth.application.usecase;
 
 import com.workspace.auth.application.dto.response.UserResponse;
-import com.workspace.auth.application.port.JwtPort;
+import com.workspace.auth.application.port.TokenPort;
 import com.workspace.auth.domain.entity.User;
 import com.workspace.auth.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserUseCase {
     private final UserRepository repo;
-    private final JwtPort jwtPort;
+    private final TokenPort jwtPort;
 
     public UserResponse getInfo(String accessToken) {
         UUID userId = jwtPort.extractUserId(accessToken);

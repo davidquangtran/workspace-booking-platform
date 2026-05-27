@@ -4,10 +4,7 @@ import com.workspace.auth.domain.entity.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.domain.Persistable;
-
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -35,9 +32,8 @@ public class UserJpaEntity {
     @Column(name = "is_active", nullable = false)
     boolean isActive;
 
-    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    LocalDateTime createdAt;
+    Instant createdAt;
 
     @Version
     @Column(name = "version", nullable = false)

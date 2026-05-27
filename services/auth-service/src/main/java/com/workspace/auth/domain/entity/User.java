@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -19,11 +19,11 @@ public class User {
     String password;
     Role role;
     boolean isActive;
-    LocalDateTime createdAt;
+    Instant createdAt;
 
     @Builder(access = AccessLevel.PACKAGE)
     private User(UUID id, String email, String password,
-                 Role role, boolean isActive, LocalDateTime createdAt) {
+                 Role role, boolean isActive, Instant createdAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -41,14 +41,14 @@ public class User {
                 .password(encodedPassword)
                 .role(Role.CUSTOMER)
                 .isActive(true)
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
                 .build();
     }
 
     // Tái tạo User TỪ DB — không validate, data đã clean sẵn
 // Đặt tên reconstitute để phân biệt với create
     public static User reconstitute(UUID id, String email, String password,
-                                    Role role, boolean isActive, LocalDateTime createdAt) {
+                                    Role role, boolean isActive, Instant createdAt) {
         return User.builder()
                 .id(id)
                 .email(email)
